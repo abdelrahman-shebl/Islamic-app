@@ -1,0 +1,28 @@
+apiVersion:  apps/v1 
+kind: Deployment
+metadata:
+  name: back-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: back
+  template:
+    metadata:
+      name: api 
+      labels:
+        tier: back
+
+    spec:
+      containers:
+        - name: backend
+          image: back-app
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - configMapRef:
+                name: cm-back
+            - secretRef:
+                name: back-creds
+                

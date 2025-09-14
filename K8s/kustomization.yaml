@@ -1,0 +1,19 @@
+resources:
+
+  - config-maps/db-cm.yaml
+  - config-maps/cm-back.yaml
+  - config-maps/cm-front.yaml
+  
+  - secrets/db-creds.yaml
+  - secrets/back-creds.yaml
+
+  - statefulsets/db-ss.yaml
+
+  - Deployments/back-deploy.yaml
+  - Deployments/fornt-deploy.yaml
+
+  - services/back-svc.yaml
+  - services/db-svc.yaml
+  - services/front-svc.yaml
+  
+  - ingress/ingress.yaml

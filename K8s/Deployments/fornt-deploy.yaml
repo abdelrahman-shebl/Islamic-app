@@ -1,0 +1,25 @@
+apiVersion:  apps/v1 
+kind: Deployment
+metadata:
+  name: font-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: front
+  template:
+    metadata:
+      name: app 
+      labels:
+        tier: front
+
+    spec:
+      containers:
+        - name: frontend
+          image: front-app
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: cm-front

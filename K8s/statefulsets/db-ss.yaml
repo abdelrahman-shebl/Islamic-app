@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db-ss
+spec:
+  
+  selector:
+    matchLabels:
+      tier: db
+  serviceName: db-svc
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        tier: db
+    spec:
+      containers:
+        - name: db
+          image: postgres:17.5
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "islamic_user", "-d", "islamic_app"]
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "islamic_user", "-d", "islamic_app"]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          envFrom:
+            - secretRef:
+                name: db-creds
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d/
+              name: init-volume
+            - mountPath: /var/lib/postgresql/data
+              name: data-volume
+      volumes:
+        - name: init-volume
+          configMap:
+            name: db-cm
+  volumeClaimTemplates:
+    - metadata:
+        name: data-volume
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: 200Mi

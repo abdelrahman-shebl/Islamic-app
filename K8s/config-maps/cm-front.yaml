@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-front
+data:
+  # Use the relative path for your Ingress
+  REACT_APP_API_URL: "/api"
+  NODE_ENV: "production"

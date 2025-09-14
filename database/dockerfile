@@ -1,0 +1,10 @@
+# FROM postgres:17.5 
+
+# ENV DB_NAME=islamic_app
+
+# ENV DB_USER=postgres
+# ENV DB_HOST=localhost
+# ENV DB_PORT=5432
+
+# ENV DATABASE_URL="postgresql://user:localhost@host:5432/db?sslmode=require"
+# jdbc:postgresql://localhost:5432/pg
