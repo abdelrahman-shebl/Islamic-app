@@ -9,8 +9,8 @@ resources:
 
   - statefulsets/db-ss.yaml
 
-  - Deployments/back-deploy.yaml
-  - Deployments/fornt-deploy.yaml
+  - Deployments/backend-deploy.yaml
+  - Deployments/forntend-deploy.yaml
 
   - services/back-svc.yaml
   - services/db-svc.yaml
