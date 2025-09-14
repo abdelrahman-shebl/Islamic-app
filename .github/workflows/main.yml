@@ -4,6 +4,7 @@ on:
       branches: 
         - "main"
         - "feature/*"
+
 jobs:
     
     Testing:
@@ -13,7 +14,7 @@ jobs:
 
         defaults:
             run:
-                working-directory: ${{matrix.project}}
+                working-directory: CI/${{ matrix.project }}
 
         runs-on: ubuntu-latest
         steps:
@@ -23,7 +24,7 @@ jobs:
 
         - name: SonarQube Scan
           continue-on-error: true
-          uses: sonarsource/sonarqube-scan-action@master
+          uses: sonarsource/sonarqube-scan-action@v1.2.0
           env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
             SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
@@ -38,7 +39,7 @@ jobs:
         runs-on: ubuntu-latest
         defaults:
           run:
-            working-directory: ${{matrix.project}}
+            working-directory: CI/${{ matrix.project }}
 
         steps:
 
@@ -54,14 +55,14 @@ jobs:
           - name: Build and push
             uses: docker/build-push-action@v6
             with:
-                context: ./${{matrix.project}}
+                context: CI/${{ matrix.project }}
                 push: false
-                tags: ${{ vars.DOCKERHUB_USERNAME }}/${{matrix.project}}:${{github.sha}}
+                tags: ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.project }}:${{ github.sha }}
 
           - name: Scan Docker image with Trivy
             uses: aquasecurity/trivy-action@0.28.0
             with:
-                image-ref: ${{ vars.DOCKERHUB_USERNAME }}/${{matrix.project}}:${{ github.sha }}
+                image-ref: ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.project }}:${{ github.sha }}
                 format: table
                 ignore-unfixed: true
                 vuln-type: os,library
@@ -71,9 +72,9 @@ jobs:
           - name: Push Docker image
             uses: docker/build-push-action@v6
             with:
-                context: ./${{matrix.project}}
+                context: CI/${{ matrix.project }}
                 push: true
-                tags: ${{ vars.DOCKERHUB_USERNAME }}/${{matrix.project}}:${{ github.sha }}
+                tags: ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.project }}:${{ github.sha }}
 
 
     Deploy:
@@ -95,9 +96,9 @@ jobs:
             with:
                 tokenPrefix: '{'
                 tokenSuffix: '}'
-                files: '["/K8s/Deployments/${{matrix.project}}.yaml"]'
+                files: '["CI/K8s/Deployments/${{ matrix.project }}.yaml"]'
             env:
-                image: ${{ vars.DOCKERHUB_USERNAME }}/${{matrix.project}}:${{ github.sha }}
+                image: ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.project }}:${{ github.sha }}
 
 
           - name: push to the remote repository
@@ -106,4 +107,3 @@ jobs:
                 commit_message: "Update image to ${{ github.sha }}"
             env:
                 GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-                
