@@ -27,13 +27,11 @@ jobs:
           with:
             projectBaseDir: .
             args: >
-              -Dsonar.projectKey=Islami-app
-              -Dsonar.projectName=Islami-app
+              -Dsonar.projectKey=islamic-app
               -Dsonar.sources=.
           env:
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
             SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     
     Build-Scan-Push:
         needs: Testing
