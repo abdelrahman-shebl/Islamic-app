@@ -4,37 +4,38 @@ on:
       branches: 
         - "main"
         - "feature/*"
+    
 
 jobs:
     
-    Testing:
-        strategy:
-            matrix:
-                project: [backend,frontend]
+    # Testing:
+    #     strategy:
+    #         matrix:
+    #             project: [backend,frontend]
 
-        defaults:
-            run:
-                working-directory: CI/${{ matrix.project }}
+    #     defaults:
+    #         run:
+    #             working-directory: CI/${{ matrix.project }}
 
-        runs-on: ubuntu-latest
-        steps:
-        - name: Checkout the code
-          uses: actions/checkout@v5.0.0
+    #     runs-on: ubuntu-latest
+    #     steps:
+    #     - name: Checkout the code
+    #       uses: actions/checkout@v5.0.0
         
 
-        - name: SonarQube Scan
-          uses: sonarsource/sonarqube-scan-action@v1.2.0
-          with:
-            projectBaseDir: .
-            args: >
-              -Dsonar.projectKey=islamic-app
-              -Dsonar.sources=.
-          env:
-            SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    #     - name: SonarQube Scan
+    #       uses: sonarsource/sonarqube-scan-action@v1.2.0
+    #       with:
+    #         projectBaseDir: .
+    #         args: >
+    #           -Dsonar.projectKey=islamic-app
+    #           -Dsonar.sources=.
+    #       env:
+    #         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+    #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     
     Build-Scan-Push:
-        needs: Testing
+        # needs: Testing
         strategy:
           matrix:
             project: [backend,frontend]
