@@ -27,8 +27,8 @@ jobs:
           with:
             projectBaseDir: .
             args: >
-              -Dsonar.projectKey=${{ matrix.project }}
-              -Dsonar.projectName=${{ matrix.project }}
+              -Dsonar.projectKey=Islami-app
+              -Dsonar.projectName=Islami-app
               -Dsonar.sources=.
           env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
