@@ -1,7 +1,7 @@
 resources:
 
   - config-maps/db-cm.yaml
-  - config-maps/cm-back.yaml
+  # - config-maps/cm-back.yaml
   - config-maps/cm-front.yaml
   
   - secrets/db-creds.yaml
@@ -16,4 +16,4 @@ resources:
   - services/db-svc.yaml
   - services/front-svc.yaml
   
-  - ingress/ingress.yaml
+  # - ingress/ingress.yaml
