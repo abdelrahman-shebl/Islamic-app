@@ -23,7 +23,6 @@ jobs:
         
 
         - name: SonarQube Scan
-          continue-on-error: true
           uses: sonarsource/sonarqube-scan-action@v1.2.0
           with:
             projectBaseDir: .
@@ -31,10 +30,9 @@ jobs:
               -Dsonar.projectKey=${{ matrix.project }}
               -Dsonar.projectName=${{ matrix.project }}
               -Dsonar.sources=.
+              -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
           env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-            SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-
     
     Build-Scan-Push:
         needs: Testing
