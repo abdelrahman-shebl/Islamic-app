@@ -30,9 +30,10 @@ jobs:
               -Dsonar.projectKey=${{ matrix.project }}
               -Dsonar.projectName=${{ matrix.project }}
               -Dsonar.sources=.
-              -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
           env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+            SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
     
     Build-Scan-Push:
         needs: Testing
