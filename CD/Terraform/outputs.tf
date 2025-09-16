@@ -2,6 +2,6 @@ output "instance_Public_IP" {
   value = aws_instance.instance.public_ip
 }
 
-output "ALB_DNS" {
+output "ALB_DNS" { 
   value = aws_lb.alb.dns_name
 }
