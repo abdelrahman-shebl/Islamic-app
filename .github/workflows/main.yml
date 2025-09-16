@@ -106,16 +106,18 @@ jobs:
           env:
             image: ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.project }}:${{ github.sha }}
 
-        # 👇 This ensures we rebase on top of the latest main before pushing
-        - name: Rebase on latest main
+        # Stage and commit BEFORE rebase
+        - name: Stage and commit changes
           run: |
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git pull --rebase origin main
+            git add CI/K8s/Deployments/${{ matrix.project }}-deploy.yaml
+            git commit -m "Update ${{ matrix.project }} image to ${{ github.sha }}" || echo "No changes to commit"
 
-        - name: Commit updated deployment file
-          uses: stefanzweifel/git-auto-commit-action@v6
-          with:
-            commit_message: "Update ${{ matrix.project }} image to ${{ github.sha }}"
+        - name: Rebase on latest main
+          run: git pull --rebase origin main
+
+        - name: Push changes
+          run: git push origin HEAD:main
           env:
             GITHUB_TOKEN: ${{ secrets.GH_PAT }}
