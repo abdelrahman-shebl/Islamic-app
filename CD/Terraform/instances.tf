@@ -25,7 +25,7 @@ resource "null_resource" "wait_for_ssh" {
 }
 
 resource "null_resource" "ansible_provision" {
-  depends_on = [null_resource.wait_for_ssh, aws_lb.ALB]
+  depends_on = [null_resource.wait_for_ssh, aws_lb.alb]
 
   provisioner "local-exec" {
     environment = {
@@ -36,7 +36,7 @@ resource "null_resource" "ansible_provision" {
         -i '${aws_instance.instance.public_ip},' \
         --private-key ~/.ssh/my-key.pem \
         -e "ansible_user=ubuntu"  \
-        -e "alb_dns=${aws_lb.ALB.dns_name}" \
+        -e "alb_dns=${aws_lb.alb.dns_name}" \
         --ask-vault-pass \
         ../Ansible/playbook.yml
     EOT

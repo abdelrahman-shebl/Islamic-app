@@ -1,5 +1,5 @@
-resource "aws_lb" "ALB" {
-  name               = "ALB"
+resource "aws_lb" "alb" {
+  name               = "alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.ALB_SG.id]
@@ -23,7 +23,7 @@ resource "aws_lb_target_group" "http_TG" {
 
 
 resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.ALB.arn
+  load_balancer_arn = aws_lb.alb.arn
   port              = 80
   protocol          = "HTTP"
 

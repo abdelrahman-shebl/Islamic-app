@@ -3,5 +3,5 @@ output "instance_Public_IP" {
 }
 
 output "ALB_DNS" {
-  value = aws_lb.ALB.dns_name
+  value = aws_lb.alb.dns_name
 }

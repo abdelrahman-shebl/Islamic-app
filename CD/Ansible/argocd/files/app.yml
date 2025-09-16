@@ -9,7 +9,7 @@ applications:
       repoURL: https://github.com/abdelrahman-shebl/Islamic-app.git
       targetRevision: HEAD
     destination:
-      namespace: Islamic-app
+      namespace: islamic-app
       server: https://kubernetes.default.svc
     syncPolicy:
       automated:
