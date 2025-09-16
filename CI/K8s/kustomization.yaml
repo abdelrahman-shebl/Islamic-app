@@ -6,7 +6,7 @@ resources:
   - secrets/back-creds.yaml
   - statefulsets/db-ss.yaml
   - Deployments/backend-deploy.yaml
-  - Deployments/forntend-deploy.yaml
+  - Deployments/frontend-deploy.yaml
   - services/back-svc.yaml
   - services/db-svc.yaml
   - services/front-svc.yaml
