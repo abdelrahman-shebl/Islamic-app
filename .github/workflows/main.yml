@@ -96,7 +96,7 @@ jobs:
         - name: Checkout the code
           uses: actions/checkout@v5
           with:
-            fetch-depth: 0   # full history so rebase works
+            fetch-depth: 0
 
         - uses: cschleiden/replace-tokens@v1 
           with:
@@ -106,12 +106,16 @@ jobs:
           env:
             image: ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.project }}:${{ github.sha }}
 
+        # 👇 This ensures we rebase on top of the latest main before pushing
+        - name: Rebase on latest main
+          run: |
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git pull --rebase origin main
+
         - name: Commit updated deployment file
           uses: stefanzweifel/git-auto-commit-action@v6
           with:
             commit_message: "Update ${{ matrix.project }} image to ${{ github.sha }}"
-            push_options: '--rebase'   # ensures both backend & frontend commits stack
-            commit_user_name: github-actions[bot]
-            commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
           env:
             GITHUB_TOKEN: ${{ secrets.GH_PAT }}
