@@ -82,32 +82,36 @@ jobs:
 
 
     Deploy:
-        needs: Build-Scan-Push
-        permissions: 
-            contents: write
+      needs: Build-Scan-Push
+      permissions:
+        contents: write
 
-        strategy:
-          matrix:
-            project: [backend,frontend]
+      strategy:
+        matrix:
+          project: [backend, frontend]
 
-        runs-on: ubuntu-latest
-        steps:
+      runs-on: ubuntu-latest
+      steps:
 
-          - name: Checkout the code
-            uses: actions/checkout@v5.0.0
+        - name: Checkout the code
+          uses: actions/checkout@v5
+          with:
+            fetch-depth: 0   # full history so rebase works
 
-          - uses: cschleiden/replace-tokens@v1 
-            with:
-                tokenPrefix: '{'
-                tokenSuffix: '}'
-                files: '["CI/K8s/Deployments/${{ matrix.project }}-deploy.yaml"]'
-            env:
-                image: ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.project }}:${{ github.sha }}
+        - uses: cschleiden/replace-tokens@v1 
+          with:
+            tokenPrefix: '{'
+            tokenSuffix: '}'
+            files: '["CI/K8s/Deployments/${{ matrix.project }}-deploy.yaml"]'
+          env:
+            image: ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.project }}:${{ github.sha }}
 
-
-          - name: push to the remote repository
-            uses: stefanzweifel/git-auto-commit-action@v6
-            with: 
-                commit_message: "Update image to ${{ github.sha }}"
-            env:
-                GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        - name: Commit updated deployment file
+          uses: stefanzweifel/git-auto-commit-action@v6
+          with:
+            commit_message: "Update ${{ matrix.project }} image to ${{ github.sha }}"
+            push_options: '--rebase'   # ensures both backend & frontend commits stack
+            commit_user_name: github-actions[bot]
+            commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
+          env:
+            GITHUB_TOKEN: ${{ secrets.GH_PAT }}
