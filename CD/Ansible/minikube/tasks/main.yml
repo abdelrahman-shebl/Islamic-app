@@ -63,52 +63,6 @@
     line: 'export KUBECONFIG=/home/{{ ansible_user }}/.kube/config'
     create: yes
 
-- name: Read Minikube CA certificate
-  slurp:
-    src: /home/ubuntu/.minikube/ca.crt
-  register: ca_crt
-
-- name: Read Minikube client certificate
-  slurp:
-    src: /home/ubuntu/.minikube/profiles/minikube/client.crt
-  register: client_crt
-
-- name: Read Minikube client key
-  slurp:
-    src: /home/ubuntu/.minikube/profiles/minikube/client.key
-  register: client_key
-
-- name: Generate portable kubeconfig with embedded certs
-  copy:
-    dest: /home/ubuntu/kubeconfig-portable.yaml
-    content: |
-      apiVersion: v1
-      clusters:
-      - cluster:
-          certificate-authority-data: {{ ca_crt.content }}
-          server: https://192.168.49.2:8443
-        name: minikube
-      contexts:
-      - context:
-          cluster: minikube
-          namespace: default
-          user: minikube
-        name: minikube
-      current-context: minikube
-      kind: Config
-      preferences: {}
-      users:
-      - name: minikube
-        user:
-          client-certificate-data: {{ client_crt.content }}
-          client-key-data: {{ client_key.content }}
-
-- name: Fetch kubeconfig to local machine
-  fetch:
-    src: /home/ubuntu/kubeconfig-portable.yaml
-    dest: "../Terraform/kubeconfig"
-    flat: yes
-
 - name: Display Minikube status
   ansible.builtin.debug:
     msg: >-
