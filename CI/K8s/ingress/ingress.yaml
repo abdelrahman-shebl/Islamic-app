@@ -4,7 +4,7 @@ metadata:
   name: ingress
 spec:
   rules:
-  - host: shebl.com
+  - host: $(ALB_DNS)
     http:
       paths:
       - path: /api

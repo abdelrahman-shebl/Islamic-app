@@ -1,0 +1,22 @@
+# roles/argocd/templates/values.yaml.j2
+applications:
+  islamic-app:
+    namespace: argocd
+    project: default
+    source:
+      path: CI/K8s
+      repoURL: https://github.com/abdelrahman-shebl/Islamic-app.git
+      targetRevision: HEAD
+      kustomize:
+        parameters:
+          - name: ALB_DNS
+            value: "{{ alb_dns }}"
+    destination:
+      namespace: Islamic-app
+      server: https://kubernetes.default.svc
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true

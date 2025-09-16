@@ -31,11 +31,10 @@
   environment:
     KUBECONFIG: "/home/{{ ansible_user }}/.kube/config"
 
-- name: Copy app.yaml
-  ansible.builtin.copy:
-    src: app.yml
+- name: Render ArgoCD values.yaml
+  ansible.builtin.template:
+    src: app.yaml.j2
     dest: /tmp/app.yaml
-  become: true
 
 - name: Deploy ArgoCD apps
   ansible.builtin.shell: helm upgrade --install argocd-apps argo/argocd-apps -n argocd -f /tmp/app.yaml

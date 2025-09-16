@@ -1,7 +1,7 @@
 resource "kubernetes_config_map" "backend" {
+    depends_on = [null_resource.wait_for_kubeconfig]
   metadata {
     name      = "cm-back"
-    namespace = "backend"
   }
 
   data = {

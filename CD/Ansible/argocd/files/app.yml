@@ -1,7 +1,7 @@
 
 applications:
    
-  Islamic-app:
+  islamic-app:
     namespace: argocd
     project: default
     source:
@@ -9,7 +9,7 @@ applications:
       repoURL: https://github.com/abdelrahman-shebl/Islamic-app.git
       targetRevision: HEAD
     destination:
-      namespace: petclinic
+      namespace: Islamic-app
       server: https://kubernetes.default.svc
     syncPolicy:
       automated:

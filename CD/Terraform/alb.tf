@@ -3,7 +3,7 @@ resource "aws_lb" "ALB" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.ALB_SG.id]
-  subnets            = [aws_subnet.public.id]
+  subnets            = [aws_subnet.public.id, aws_subnet.public2.id]
 
 }
 
@@ -58,5 +58,3 @@ resource "aws_lb_target_group_attachment" "ec2_http" {
 #   target_id        = aws_instance.instance.id
 #   port             = 443
 # }
-
-

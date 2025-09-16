@@ -7,8 +7,9 @@ variable "cidr" {
 }
 
 locals {
-  pub_subnet = cidrsubnets(var.cidr,8,0)
-  pri_subnet = cidrsubnets(var.cidr,8,0)
+  pub_subnet1 = "10.0.1.0/24"
+  pub_subnet2 = "10.0.2.0/24"
+  # pri_subnet = cidrsubnets(var.cidr,8,1)
 }
 
 data "aws_availability_zones" "available" {
@@ -26,11 +27,3 @@ variable "instance_type" {
  default = "t2.medium" 
 }
 
-variable "JS_type" {
- default = "t2.micro" 
-}
-
-variable "kubeconfig" {
-  type = string
-  default = file("${path.module}/kubeconfig.yaml")
-}

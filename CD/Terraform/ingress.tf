@@ -1,5 +1,5 @@
 resource "kubernetes_ingress_v1" "ingress" {
-  depends_on = [ null_resource.provision_minikube ]
+  depends_on = [null_resource.wait_for_kubeconfig]
   metadata {
     name = "ingress"
   }
@@ -27,4 +27,3 @@ resource "kubernetes_ingress_v1" "ingress" {
     
   }
 }
-
