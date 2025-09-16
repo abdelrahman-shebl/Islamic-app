@@ -85,6 +85,9 @@ jobs:
       needs: Build-Scan-Push
       permissions:
         contents: write
+      strategy:
+        matrix:
+          project: [backend, frontend]
       runs-on: ubuntu-latest
 
       steps:
@@ -93,23 +96,20 @@ jobs:
           with:
             fetch-depth: 0
 
-        - uses: cschleiden/replace-tokens@v1 
+        - uses: cschleiden/replace-tokens@v1
           with:
             tokenPrefix: '{'
             tokenSuffix: '}'
-            files: |
-              ["CI/K8s/Deployments/backend-deploy.yaml",
-              "CI/K8s/Deployments/frontend-deploy.yaml"]
+            files: '["CI/K8s/Deployments/${{ matrix.project }}-deploy.yaml"]'
           env:
-            backend_image: ${{ vars.DOCKERHUB_USERNAME }}/backend:${{ github.sha }}
-            frontend_image: ${{ vars.DOCKERHUB_USERNAME }}/frontend:${{ github.sha }}
+            image: ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.project }}:${{ github.sha }}
 
-        - name: Commit and push both changes
+        - name: Commit and push
           run: |
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add CI/K8s/Deployments/*
-            git commit -m "Update backend & frontend images to ${{ github.sha }}" || echo "No changes to commit"
+            git add CI/K8s/Deployments/${{ matrix.project }}-deploy.yaml
+            git commit -m "Update ${{ matrix.project }} image to ${{ github.sha }}" || echo "No changes"
             git pull --rebase origin main
             git push origin HEAD:main
           env:
