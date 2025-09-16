@@ -12,7 +12,7 @@ applications:
           - name: ALB_DNS
             value: "{{ alb_dns }}"
     destination:
-      namespace: Islamic-app
+      namespace: islamic-app
       server: https://kubernetes.default.svc
     syncPolicy:
       automated:
