@@ -7,7 +7,7 @@ applications:
     source:
       path: CI/K8s
       repoURL: https://github.com/abdelrahman-shebl/Islamic-app.git
-      targetRevision: HEAD
+      targetRevision: "feature/testing"
     destination:
       namespace: islamic-app
       server: https://kubernetes.default.svc

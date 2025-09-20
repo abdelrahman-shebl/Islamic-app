@@ -12,20 +12,20 @@ resources:
   - services/front-svc.yaml
   - ingress/ingress.yaml
 
-# Define a variable for ALB DNS
-configMapGenerator:
-  - name: alb-config
-    literals:
-      - alb_dns=changeme.com
+# # Define a variable for ALB DNS
+# configMapGenerator:
+#   - name: alb-config
+#     literals:
+#       - alb_dns=changeme.com
 
-vars:
-  - name: ALB_DNS
-    objref:
-      kind: ConfigMap
-      name: alb-config
-      apiVersion: v1
-    fieldref:
-      fieldpath: data.alb_dns
+# vars:
+#   - name: ALB_DNS
+#     objref:
+#       kind: ConfigMap
+#       name: alb-config
+#       apiVersion: v1
+#     fieldref:
+#       fieldpath: data.alb_dns
 
-configurations:
-  - kustomizeconfig.yaml
+# configurations:
+#   - kustomizeconfig.yaml

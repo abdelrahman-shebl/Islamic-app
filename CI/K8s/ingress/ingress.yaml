@@ -4,8 +4,7 @@ metadata:
   name: ingress
 spec:
   rules:
-  - host: $(ALB_DNS)
-    http:
+   - http:
       paths:
       - path: /api
         pathType: Prefix
