@@ -45,10 +45,6 @@
   environment:
     KUBECONFIG: "/home/{{ ansible_user }}/.kube/config"
 
-- name: enable ingress
-  ansible.builtin.shell:
-    cmd: minikube addons enable ingress 
-
 - name: Ensure kubeconfig exists
   ansible.builtin.file:
     path: /home/{{ ansible_user }}/.kube/config

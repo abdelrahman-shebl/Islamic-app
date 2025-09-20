@@ -6,6 +6,7 @@
     - kubectl
     - minikube
     - helm
+    - ingress
     - sealed-secrets
     - prometheus
     - argocd

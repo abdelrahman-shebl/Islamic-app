@@ -1,5 +1,5 @@
-varReference:
-  - kind: ConfigMap
-    path: data/CORS_ORIGINS
-  - kind: Ingress
-    path: spec/rules/host
+# varReference:
+#   - kind: ConfigMap
+#     path: data/CORS_ORIGINS
+#   - kind: Ingress
+#     path: spec/rules/host

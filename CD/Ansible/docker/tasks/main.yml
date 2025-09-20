@@ -1,4 +1,8 @@
 # roles/docker/tasks/main.yml
+- name: Debug alb_dns
+  ansible.builtin.debug:
+    msg: "ALB DNS passed is {{ alb_dns }}"
+
 - name: Check if Docker is already installed
   ansible.builtin.command:
     cmd: docker --version
