@@ -5,6 +5,7 @@ COPY package*.json ./
 RUN npm ci --legacy-peer-deps
 COPY . .
 RUN npm run build
+
 # --- Production Stage ---
 FROM node:alpine
 WORKDIR /app

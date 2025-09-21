@@ -44,6 +44,7 @@ provider "helm" {
 }
 
 
+
 resource "helm_release" "aws_load_balancer_controller" {
   depends_on = [aws_eks_node_group.eks_node_group]
   name       = "aws-load-balancer-controller"
