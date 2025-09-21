@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: {image}
+          image: ci-backend #{image}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5000

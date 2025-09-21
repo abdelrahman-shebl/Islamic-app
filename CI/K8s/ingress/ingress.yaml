@@ -4,7 +4,8 @@ metadata:
   name: ingress
 spec:
   rules:
-   - http:
+  
+  - http:
       paths:
       - path: /api
         pathType: Prefix
@@ -19,4 +20,4 @@ spec:
           service:
             name: front-svc
             port:
-              number: 3000
+              number: 80

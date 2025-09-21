@@ -12,6 +12,17 @@ resource "aws_lb_target_group" "http_TG" {
   protocol = "HTTP"
   vpc_id   = aws_vpc.main.id
   target_type = "instance"
+  health_check {
+    enabled             = true
+    interval            = 30
+    matcher             = "200-399"
+    path                = "/health"
+    port                = "80"
+    protocol            = "HTTP"
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
 }
 
 # resource "aws_lb_target_group" "https_TG" {
