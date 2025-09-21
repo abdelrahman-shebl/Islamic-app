@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ci-frontend #{image}
+          image: {image}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000

@@ -37,7 +37,7 @@ resource "null_resource" "ansible_provision" {
         --private-key ~/.ssh/my-key.pem \
         -e "ansible_user=ubuntu"  \
         -e "alb_dns=${aws_lb.alb.dns_name}" \
-        --ask-vault-pass \
+         --ask-vault-pass \
         ../Ansible/playbook.yml
     EOT
   }
