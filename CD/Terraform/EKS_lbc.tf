@@ -37,7 +37,7 @@ resource "aws_iam_role_policy_attachment" "test-attach" {
 resource "aws_eks_pod_identity_association" "eks_pod_identity_association" {
   cluster_name    = aws_eks_cluster.eks.name
   namespace       = "kube-system"
-  service_account = "aws_load_balancer_sa"
+  service_account = "aws-load-balancer-sa"
   role_arn        = aws_iam_role.lbc_role.arn
   depends_on = [helm_release.aws_load_balancer_controller]
 }

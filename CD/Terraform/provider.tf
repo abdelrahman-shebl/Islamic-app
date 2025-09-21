@@ -36,10 +36,16 @@ provider "kubernetes" {
 }
 
 provider "helm" {
+    kubernetes {
+    host                   = data.aws_eks_cluster.eks.endpoint
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
+    token                  = data.aws_eks_cluster_auth.eks.token
+  }
 }
 
 
 resource "helm_release" "aws_load_balancer_controller" {
+  depends_on = [aws_eks_node_group.eks_node_group]
   name       = "aws-load-balancer-controller"
   namespace = "kube-system"
   repository = "https://aws.github.io/eks-charts"
@@ -50,13 +56,22 @@ resource "helm_release" "aws_load_balancer_controller" {
       name  = "serviceAccount.create"
       value = "true"
     }
+      set {
+    name  = "region"
+    value = "us-east-1"
+  }
+
+  set {
+    name  = "vpcId"
+    value = aws_vpc.main.id
+  }
    set {
       name  = "clusterName"
       value = aws_eks_cluster.eks.name
     }
     set{
       name  = "serviceAccount.name"
-      value = "aws_load_balancer_sa"
+      value = "aws-load-balancer-sa"
     }
 
 
@@ -86,10 +101,12 @@ resource "helm_release" "aws_load_balancer_controller" {
 # }
 
 resource "helm_release" "argo" {
+  depends_on = [aws_eks_node_group.eks_node_group]
   name       = "argocd"
   namespace  = "argocd"
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argo-cd"
+  create_namespace = true
 
   values = [
     file("${path.module}/values/argo-values.yaml")
@@ -97,8 +114,10 @@ resource "helm_release" "argo" {
 }
 
 resource "helm_release" "argocd-apps" {
+  depends_on = [aws_eks_node_group.eks_node_group, helm_release.argo]
   name       = "argocd-apps"
   namespace  = "argocd"
+  create_namespace = true
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argocd-apps"
 
