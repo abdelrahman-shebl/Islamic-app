@@ -21,5 +21,5 @@ resource "aws_eks_cluster" "eks" {
 
 
 
-  depends_on = [ aws_iam_role_policy_attachment.eks-attach]
+  depends_on = [ aws_iam_role_policy_attachment.eks-attach1, aws_iam_role_policy_attachment.eks-attach2]
 }

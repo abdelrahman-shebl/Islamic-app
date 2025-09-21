@@ -1,4 +1,3 @@
-data "aws_caller_identity" "current" {}
 
 # resource "aws_iam_role" "eks_admin" {
 
@@ -93,7 +92,7 @@ data "aws_caller_identity" "current" {}
 
 resource "aws_eks_access_entry" "example" {
   cluster_name      = aws_eks_cluster.eks.name
-  principal_arn     = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/shebl22"
+  principal_arn     = "arn:aws:iam::495599741125:user/Shebl"
   
   kubernetes_groups = ["my-admin"]
 }

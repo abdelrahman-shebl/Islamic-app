@@ -39,5 +39,5 @@ resource "aws_eks_pod_identity_association" "eks_pod_identity_association" {
   namespace       = "kube-system"
   service_account = "aws_load_balancer_sa"
   role_arn        = aws_iam_role.lbc_role.arn
+  depends_on = [helm_release.aws_load_balancer_controller]
 }
-

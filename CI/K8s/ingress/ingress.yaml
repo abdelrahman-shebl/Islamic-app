@@ -3,13 +3,13 @@ kind: Ingress
 metadata:
   name: ingress
   annotations:
+    kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/healthcheck-path: /healthz.txt
-
+    alb.ingress.kubernetes.io/target-type: ip   
+    alb.ingress.kubernetes.io/healthcheck-path: /health
 spec:
   rules:
-  # - host: $(ALB_DNS)
+  
   - http:
       paths:
       - path: /api
@@ -25,4 +25,4 @@ spec:
           service:
             name: front-svc
             port:
-              number: 3000
+              number: 80

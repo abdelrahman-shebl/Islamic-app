@@ -16,7 +16,13 @@ resource "aws_iam_role" "eks_role" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "eks-attach" {
+resource "aws_iam_role_policy_attachment" "eks-attach2" {
+  role       = aws_iam_role.eks_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
+}
+
+
+resource "aws_iam_role_policy_attachment" "eks-attach1" {
   role       = aws_iam_role.eks_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }

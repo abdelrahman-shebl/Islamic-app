@@ -46,16 +46,18 @@ resource "helm_release" "aws_load_balancer_controller" {
   chart      = "aws-load-balancer-controller"
   version    = "1.8.1"
 
-  set = [
-    {
+    set {
+      name  = "serviceAccount.create"
+      value = "true"
+    }
+   set {
       name  = "clusterName"
       value = aws_eks_cluster.eks.name
-    },
-    {
+    }
+    set{
       name  = "serviceAccount.name"
       value = "aws_load_balancer_sa"
     }
-  ]
 
 
 }
