@@ -81,13 +81,10 @@ jobs:
                 tags: ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.project }}:${{ github.sha }}
 
 
-    Deploy:
+    Deploy-Backend:
       needs: Build-Scan-Push
       permissions:
         contents: write
-      strategy:
-        matrix:
-          project: [backend, frontend]
       runs-on: ubuntu-latest
 
       steps:
@@ -100,17 +97,48 @@ jobs:
           with:
             tokenPrefix: '{'
             tokenSuffix: '}'
-            files: '["CI/K8s/Deployments/${{ matrix.project }}-deploy.yaml"]'
+            files: '["CI/K8s/Deployments/backend-deploy.yaml"]'
           env:
-            image: ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.project }}:${{ github.sha }}
+            image: ${{ vars.DOCKERHUB_USERNAME }}/backend:${{ github.sha }}
 
         - name: Commit and push
           run: |
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add CI/K8s/Deployments/${{ matrix.project }}-deploy.yaml
-            git commit -m "Update ${{ matrix.project }} image to ${{ github.sha }}" || echo "No changes"
-            git pull --rebase origin main
-            git push origin HEAD:main
+            git add CI/K8s/Deployments/backend-deploy.yaml
+            git commit -m "Update backend image to ${{ github.sha }}" || echo "No changes"
+            git pull --rebase origin ${{ github.ref_name }}
+            git push origin HEAD:${{ github.ref_name }}
+          env:
+            GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+
+    Deploy-Frontend:
+      needs: Deploy-Backend
+      permissions:
+        contents: write
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout the code
+          uses: actions/checkout@v5
+          with:
+            fetch-depth: 0
+
+        - uses: cschleiden/replace-tokens@v1
+          with:
+            tokenPrefix: '{'
+            tokenSuffix: '}'
+            files: '["CI/K8s/Deployments/frontend-deploy.yaml"]'
+          env:
+            image: ${{ vars.DOCKERHUB_USERNAME }}/frontend:${{ github.sha }}
+
+        - name: Commit and push
+          run: |
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add CI/K8s/Deployments/frontend-deploy.yaml
+            git commit -m "Update frontend image to ${{ github.sha }}" || echo "No changes"
+            git pull --rebase origin ${{ github.ref_name }}
+            git push origin HEAD:${{ github.ref_name }}
           env:
             GITHUB_TOKEN: ${{ secrets.GH_PAT }}
