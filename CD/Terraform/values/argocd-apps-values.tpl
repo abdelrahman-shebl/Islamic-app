@@ -37,7 +37,8 @@ applications:
       namespace: eso
       server: https://kubernetes.default.svc
     helm:
-      values: |
+      values: | 
+        installCRDs: true 
         serviceAccount:
           create: true
           name: eso-sa
@@ -50,6 +51,7 @@ applications:
         selfHeal: true
       syncOptions:
         - CreateNamespace=true
+        - Replace=true 
 
   external-secrets-manifests:
     namespace: argocd
