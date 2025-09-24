@@ -116,7 +116,8 @@ const Login: React.FC = () => {
 
   const inputStyle = (focused: boolean, hasValue: boolean): React.CSSProperties => ({
     width: '100%',
-    padding: '1rem 3rem 1rem 1rem',
+    padding: '1rem 3.5rem 1rem 3.5rem', // Symmetrical padding
+    boxSizing: 'border-box', // Prevents overflow
     border: `2px solid ${
       focused 
         ? (isDarkMode ? '#3b82f6' : '#2563eb')
@@ -133,7 +134,7 @@ const Login: React.FC = () => {
 
   const labelStyle = (focused: boolean, hasValue: boolean): React.CSSProperties => ({
     position: 'absolute',
-    right: '1rem',
+    right: '3.5rem', // Adjusted for the right-side button
     top: focused || hasValue ? '-0.5rem' : '1rem',
     fontSize: focused || hasValue ? '0.75rem' : '1rem',
     color: focused 
@@ -148,7 +149,7 @@ const Login: React.FC = () => {
 
   const iconStyle: React.CSSProperties = {
     position: 'absolute',
-    left: '1rem',
+    left: '1.25rem', // Standardized position
     top: '50%',
     transform: 'translateY(-50%)',
     fontSize: '1.25rem',
@@ -296,7 +297,7 @@ const Login: React.FC = () => {
               onClick={() => setShowPassword(!showPassword)}
               style={{
                 position: 'absolute',
-                left: '3rem',
+                right: '1.25rem', // Moved to the right
                 top: '50%',
                 transform: 'translateY(-50%)',
                 background: 'none',
@@ -415,3 +416,4 @@ const Login: React.FC = () => {
 };
 
 export default Login;
+

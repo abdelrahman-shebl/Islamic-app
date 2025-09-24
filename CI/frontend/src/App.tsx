@@ -81,8 +81,8 @@ const AppRoutes = () => {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={!auth.isAuthenticated ? <Login /> : <Navigate to="/dashboard" />} />
-          <Route path="/register" element={!auth.isAuthenticated ? <Register /> : <Navigate to="/dashboard" />} />
+          <Route path="/login" element={!auth.isAuthenticated ? <Login /> : <Navigate to="/" />} />
+          <Route path="/register" element={!auth.isAuthenticated ? <Register /> : <Navigate to="/" />} />
           <Route path="/tasbeh" element={<ProtectedRoute><Tasbeh /></ProtectedRoute>} />
           <Route path="/prayer-times" element={<ProtectedRoute><PrayerTimes /></ProtectedRoute>} />
           <Route path="/quran" element={<ProtectedRoute><Quran /></ProtectedRoute>} />

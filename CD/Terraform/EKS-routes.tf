@@ -3,7 +3,7 @@ resource "aws_eip" "eip" {
 }
 
 resource "aws_nat_gateway" "NAT" {
-  allocation_id = aws_eip.eip.id
+  allocation_id = aws_eip.eip.allocation_id
   subnet_id     = aws_subnet.public1.id
 
   tags = {

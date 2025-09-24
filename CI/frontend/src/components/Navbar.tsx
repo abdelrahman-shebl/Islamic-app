@@ -22,8 +22,8 @@ const Navbar: React.FC = () => {
     { path: '/prayer-times', label: '🕌 أوقات الصلاة', showWhenLoggedIn: true, showWhenLoggedOut: false },
     { path: '/quran', label: '📖 القرآن', showWhenLoggedIn: true, showWhenLoggedOut: false },
     { path: '/quran-audio', label: '🎵 القرآن الصوتي', showWhenLoggedIn: true, showWhenLoggedOut: false },
-    { path: '/hadith', label: '📚 الأحاديث', showWhenLoggedIn: true, showWhenLoggedOut: false },
-    { path: '/profile', label: '👤 الملف الشخصي', showWhenLoggedIn: true, showWhenLoggedOut: false }
+    { path: '/hadith', label: '📚 الأحاديث', showWhenLoggedIn: true, showWhenLoggedOut: false }
+    // { path: '/profile', label: '👤 الملف الشخصى', showWhenLoggedIn: true, showWhenLoggedOut: false }
   ];
 
   const filteredItems = navigationItems.filter(item => 

@@ -29,7 +29,7 @@ resource "aws_iam_policy" "alb_controller_policy" {
   policy      = file("iam_policy.json") 
 }
 
-resource "aws_iam_role_policy_attachment" "test-attach" {
+resource "aws_iam_role_policy_attachment" "lbc-attach" {
   role       = aws_iam_role.lbc_role.name
   policy_arn = aws_iam_policy.alb_controller_policy.arn
 }
@@ -40,4 +40,13 @@ resource "aws_eks_pod_identity_association" "eks_pod_identity_association" {
   service_account = "aws-load-balancer-sa"
   role_arn        = aws_iam_role.lbc_role.arn
   depends_on = [helm_release.aws_load_balancer_controller]
+}
+
+resource "aws_eks_addon" "pod_identity" {
+  cluster_name             = aws_eks_cluster.eks.name
+  addon_name               = "eks-pod-identity-agent"
+  addon_version            = "v1.3.2-eksbuild.2"  
+  resolve_conflicts_on_create        = "OVERWRITE"
+  
+  depends_on = [aws_eks_node_group.eks_node_group]
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -23,6 +23,7 @@ const Register: React.FC = () => {
   });
   const { register, isLoading, error } = useAuth();
   const { isDarkMode } = useTheme();
+  const navigate = useNavigate();
 
   // Enhanced Islamic phrases for background animation
   const islamicPhrases = [
@@ -180,6 +181,7 @@ const Register: React.FC = () => {
 
     try {
       await register(formData.username.trim(), formData.email.trim().toLowerCase(), formData.password);
+      navigate('/');
     } catch (err: any) {
       setLocalError(err.message || 'فشل إنشاء الحساب');
     }
@@ -227,7 +229,8 @@ const Register: React.FC = () => {
 
   const inputStyle = (focused: boolean, hasValue: boolean, isValid: boolean = true): React.CSSProperties => ({
     width: '100%',
-    padding: '1.25rem 3.5rem 1.25rem 1.25rem',
+    padding: '1.25rem 3.5rem 1.25rem 3.5rem',
+    boxSizing: 'border-box',
     border: `2px solid ${
       !isValid 
         ? '#ef4444'
@@ -249,7 +252,7 @@ const Register: React.FC = () => {
 
   const labelStyle = (focused: boolean, hasValue: boolean, isValid: boolean = true): React.CSSProperties => ({
     position: 'absolute',
-    right: '1.25rem',
+    right: '3.5rem',
     top: focused || hasValue ? '-0.75rem' : '1.25rem',
     fontSize: focused || hasValue ? '0.875rem' : '1.1rem',
     color: !isValid
@@ -511,7 +514,7 @@ const Register: React.FC = () => {
               onClick={() => setShowPassword(!showPassword)}
               style={{
                 position: 'absolute',
-                left: '3.5rem',
+                right: '1.25rem',
                 top: '50%',
                 transform: 'translateY(-50%)',
                 background: 'none',
@@ -584,7 +587,7 @@ const Register: React.FC = () => {
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               style={{
                 position: 'absolute',
-                left: '3.5rem',
+                right: '1.25rem',
                 top: '50%',
                 transform: 'translateY(-50%)',
                 background: 'none',
@@ -765,3 +768,4 @@ const Register: React.FC = () => {
 };
 
 export default Register;
+

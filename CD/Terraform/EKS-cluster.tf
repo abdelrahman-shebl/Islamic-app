@@ -8,7 +8,8 @@ resource "aws_eks_cluster" "eks" {
         endpoint_public_access = true
     subnet_ids = [
       aws_subnet.private1.id,
-      aws_subnet.private2.id
+      aws_subnet.private2.id,
+      aws_subnet.public1.id
     ]
     security_group_ids = [aws_security_group.eks_control_plane.id]
   }

@@ -33,7 +33,7 @@ spec:
             periodSeconds: 10
           envFrom:
             - secretRef:
-                name: db-creds
+                name: db-secrets 
           volumeMounts:
             - mountPath: /docker-entrypoint-initdb.d/
               name: init-volume
