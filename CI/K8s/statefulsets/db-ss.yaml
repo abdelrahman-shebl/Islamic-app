@@ -39,6 +39,7 @@ spec:
               name: init-volume
             - mountPath: /var/lib/postgresql/data
               name: data-volume
+              subPath: postgres
       volumes:
         - name: init-volume
           configMap:

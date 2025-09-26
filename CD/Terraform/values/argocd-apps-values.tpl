@@ -7,9 +7,10 @@ applications:
     source:
       chart: aws-ebs-csi-driver
       repoURL: https://kubernetes-sigs.github.io/aws-ebs-csi-driver
-      targetRevision: ""
+      targetRevision: "*"
       helm:
         values: |
+         controller:
           serviceAccount:
             create: true
             name: ebs-sa
@@ -61,7 +62,7 @@ applications:
         - CreateNamespace=true
 
 
-external-dns:
+  external-dns:
     namespace: argocd
     project: default
     source:
@@ -183,7 +184,6 @@ external-dns:
         argocd.argoproj.io/sync-wave: "5"
     syncPolicy:
       automated:
-        prune: true
         selfHeal: true
       syncOptions:
         - CreateNamespace=true

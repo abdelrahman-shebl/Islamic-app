@@ -24,7 +24,7 @@ resource "aws_iam_role" "edns" {
 resource "aws_iam_policy" "edns-policy" {
   name        = "edns-policy"
 
-  policy = file("policies/iam_eso.json")
+  policy = file("policies/iam-EDNS.json")
 }
 
 
