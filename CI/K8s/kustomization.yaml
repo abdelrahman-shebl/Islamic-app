@@ -1,13 +1,7 @@
 resources:
-  - config-maps/cm-back.yaml
-  - config-maps/cm-front.yaml
-  - config-maps/db-cm.yaml
-  - secrets/db-creds.yaml
-  - secrets/back-creds.yaml
-  - statefulsets/db-ss.yaml
-  - Deployments/backend-deploy.yaml
-  - Deployments/frontend-deploy.yaml
-  - services/back-svc.yaml
-  - services/db-svc.yaml
-  - services/front-svc.yaml
-  - ingress/ingress.yaml
+  - config-maps
+  - StorageClass
+  - statefulsets
+  - Deployments
+  - services
+  - ingress
