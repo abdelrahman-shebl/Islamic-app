@@ -2,6 +2,7 @@
 # Terraform
 # -----------------------------
 **/.terraform/*
+CD/Terraform/variables.yaml
 *.tfstate
 *.tfstate.*
 crash.log
@@ -13,12 +14,12 @@ override.tf.json
 *_override.tf.json
 !.terraform.lock.hcl   # Keep lock file for provider versions
 
-
 # -----------------------------
 # Ansible
 # -----------------------------
 # Ignore temporary or sensitive files
 *.retry
+CD/Ansible/*
 
 
 # -----------------------------

@@ -43,6 +43,8 @@
 
 resource "helm_release" "argo" {
   depends_on = [aws_eks_node_group.eks_node_group]
+  disable_openapi_validation = true
+
   name       = "argocd"
   namespace  = "argocd"
   repository = "https://argoproj.github.io/argo-helm"
@@ -56,6 +58,7 @@ resource "helm_release" "argo" {
 
 resource "helm_release" "argocd-apps" {
   depends_on = [helm_release.argo]
+  disable_openapi_validation = true
   name       = "argocd-apps"
   namespace  = "argocd"
   create_namespace = true
@@ -65,8 +68,12 @@ resource "helm_release" "argocd-apps" {
   values = [
     templatefile("${path.module}/values/argocd-apps-values.tpl",{
       lbc_role_arn = aws_iam_role.lbc.arn
+      edns_role_arn = aws_iam_role.edns.arn
+      ebs_role_arn = aws_iam_role.ebs.arn
       eso_role_arn = aws_iam_role.eso.arn
       cluster_name = aws_eks_cluster.eks.name
+      vpc_id       = aws_vpc.main.id 
+      aws_region   = var.region 
     })
   ]
 }

@@ -9,7 +9,7 @@ spec:
     matchLabels:
       tier: db
   serviceName: db-svc
-  replicas: 1
+  replicas: 3
   template:
     metadata:
       labels:
@@ -37,20 +37,21 @@ spec:
           volumeMounts:
             - mountPath: /docker-entrypoint-initdb.d/
               name: init-volume
-            # - mountPath: /var/lib/postgresql/data
-            #   name: data-volume
+            - mountPath: /var/lib/postgresql/data
+              name: data-volume
       volumes:
         - name: init-volume
           configMap:
             name: db-cm
-  # volumeClaimTemplates:
-  #   - metadata:
-  #       name: data-volume
-  #     spec:
-  #       accessModes:
-  #         - "ReadWriteOnce"
+
+  volumeClaimTemplates:
+    - metadata:
+        name: data-volume
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
         
-  #       resources:
-  #         requests:
-  #           storage: 200Mi
-  #       storageClassName: gp2-csi
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: ebs-gp2

@@ -4,12 +4,14 @@ metadata:
   name: ingress
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
+    external-dns.alpha.kubernetes.io/hostname: shebl22.me
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/healthcheck-path: /health
 spec:
   ingressClassName: alb
   rules:
-  - http:
+  - host: shebl22.me
+    http:
       paths:
       - path: /api
         pathType: Prefix

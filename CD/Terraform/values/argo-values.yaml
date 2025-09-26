@@ -16,11 +16,11 @@ server:
       targetPort: 8083
   resources:
     requests:
-      cpu: 50m
-      memory: 128Mi
+      cpu: 150m
+      memory: 384Mi
     limits:
-      cpu: 200m
-      memory: 256Mi
+      cpu: 400m
+      memory: 768Mi
 
 repoServer:
   replicas: 1
@@ -32,11 +32,11 @@ repoServer:
       targetPort: 8084
   resources:
     requests:
-      cpu: 50m
-      memory: 128Mi
-    limits:
       cpu: 200m
-      memory: 256Mi
+      memory: 512Mi
+    limits:
+      cpu: 400m
+      memory: 1.5Gi   
 
 controller:
   replicas: 1
@@ -48,14 +48,14 @@ controller:
       targetPort: 8082
   resources:
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 150m
+      memory: 384Mi
     limits:
-      cpu: 300m
-      memory: 256Mi
+      cpu: 400m
+      memory: 768Mi
 
 dex:
-  enabled: false 
+  enabled: false
 
 
 # extraObjects:

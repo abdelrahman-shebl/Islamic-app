@@ -5,7 +5,7 @@ metadata:
 spec:
   selector:
     tier: back
-  type: ClusterIP  # Changed from NodePort
+  clusterIP: None
   ports:
   - port: 5000
     targetPort: 5000

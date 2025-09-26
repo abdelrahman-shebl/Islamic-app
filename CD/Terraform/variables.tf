@@ -23,6 +23,10 @@ locals {
   azs = data.aws_availability_zones.available.names
 }
 
+locals {
+  secrets = yamldecode(file("${path.module}/variables.yaml"))
+}
+
 variable "ami" {
   default = "ami-0360c520857e3138f"
 }
