@@ -3,7 +3,7 @@ configs:
     argocdServerAdminPassword: "$2a$10$MVBkBkAxErFWaBpXA4Ltz.Kiwhcz0CkNmVZZgZPa/03JpykN50BVO"
 
 server:
-  replicas: 1
+  replicas: 2  # Increased to 2 for high availability
   service:
     type: LoadBalancer
   metrics:
@@ -14,14 +14,14 @@ server:
       targetPort: 8083
   resources:
     requests:
-      cpu: 150m
-      memory: 384Mi
+      cpu: 250m  # Increased CPU request for handling multiple API requests
+      memory: 512Mi  # Increased memory for larger workloads
     limits:
-      cpu: 400m
-      memory: 768Mi
+      cpu: 500m  # Slightly increased to avoid throttling
+      memory: 1Gi  # Increased to handle multiple concurrent connections
 
 repoServer:
-  replicas: 1
+  replicas: 2  # Increased to 2 to handle Git operations for 9 charts
   metrics:
     enabled: true
     service:
@@ -30,14 +30,19 @@ repoServer:
       targetPort: 8084
   resources:
     requests:
-      cpu: 200m
-      memory: 512Mi
+      cpu: 300m  # Increased to handle Git repository operations for multiple charts
+      memory: 768Mi  # Increased to support larger repository caches
     limits:
-      cpu: 400m
-      memory: 1.5Gi   
+      cpu: 600m  # Increased to avoid throttling during heavy Git operations
+      memory: 2Gi  # Increased to handle larger manifests and concurrent operations
+  env:
+    - name: ARGOCD_GIT_ATTEMPTS_COUNT
+      value: "3"  # Retry Git operations for reliability
+    - name: ARGOCD_GIT_TIMEOUT
+      value: "30"  # Increase Git operation timeout to handle larger repos
 
 controller:
-  replicas: 1
+  replicas: 2  # Increased to 2 for parallel processing of 9 applications
   metrics:
     enabled: true
     service:
@@ -46,96 +51,126 @@ controller:
       targetPort: 8082
   resources:
     requests:
-      cpu: 150m
-      memory: 384Mi
+      cpu: 300m  # Increased to handle sync operations for 9 charts
+      memory: 768Mi  # Increased to manage larger application states
     limits:
-      cpu: 400m
-      memory: 768Mi
+      cpu: 800m  # Increased to support parallel syncs
+      memory: 1.5Gi  # Increased to handle complex application manifests
+  parallelismLimit: 20  # Increased to allow parallel processing of multiple applications
+  appSync: 60  # Reduced sync interval to 60 seconds for faster application updates
 
 dex:
-  enabled: false
+  enabled: false  # Already disabled, no change needed
 
+# Additional configurations for scalability
+applicationSet:
+  replicas: 2  # Enable ApplicationSet controller with 2 replicas for managing multiple apps
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 400m
+      memory: 1Gi
 
-extraObjects:
-  - apiVersion: monitoring.coreos.com/v1
-    kind: ServiceMonitor
-    metadata:
-      name: argocd-application-controller-metrics
-      namespace: monitoring
-      labels:
-        app.kubernetes.io/name: argocd
-        app.kubernetes.io/component: application-controller
-        release: my-kube-prometheus-stack
-    spec:
-      namespaceSelector:
-        matchNames:
-          - argocd
-      selector:
-        matchLabels:
-          app.kubernetes.io/name: argocd-metrics  
-      endpoints:
-        - port: metrics
-          interval: 30s
-          path: /metrics
+# Configure Redis for better performance
+redis:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 200m
+      memory: 512Mi
 
-  - apiVersion: monitoring.coreos.com/v1
-    kind: ServiceMonitor
-    metadata:
-      name: argocd-server-metrics
-      namespace: monitoring
-      labels:
-        app.kubernetes.io/name: argocd
-        app.kubernetes.io/component: server
-        release: my-kube-prometheus-stack
-    spec:
-      namespaceSelector:
-        matchNames:
-          - argocd
-      selector:
-        matchLabels:
-          app.kubernetes.io/name: argocd-server-metrics 
-      endpoints:
-        - port: metrics
-          interval: 30s
-          path: /metrics
+# Enable auto-scaling for repoServer and controller
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
 
-  - apiVersion: monitoring.coreos.com/v1
-    kind: ServiceMonitor
-    metadata:
-      name: argocd-repo-server-metrics
-      namespace: monitoring
-      labels:
-        app.kubernetes.io/name: argocd
-        app.kubernetes.io/component: repo-server
-        release: my-kube-prometheus-stack
-    spec:
-      namespaceSelector:
-        matchNames:
-          - argocd
-      selector:
-        matchLabels:
-          app.kubernetes.io/name: argocd-repo-server-metrics  
-      endpoints:
-        - port: metrics
-          interval: 30s
-          path: /metrics
+# extraObjects:
+#   - apiVersion: monitoring.coreos.com/v1
+#     kind: ServiceMonitor
+#     metadata:
+#       name: argocd-application-controller-metrics
+#       namespace: monitoring
+#       labels:
+#         app.kubernetes.io/name: argocd
+#         app.kubernetes.io/component: application-controller
+#         release: my-kube-prometheus-stack
+#     spec:
+#       namespaceSelector:
+#         matchNames:
+#           - argocd
+#       selector:
+#         matchLabels:
+#           app.kubernetes.io/name: argocd-metrics  
+#       endpoints:
+#         - port: metrics
+#           interval: 30s
+#           path: /metrics
 
-  - apiVersion: networking.k8s.io/v1
-    kind: NetworkPolicy
-    metadata:
-      name: allow-controller-to-repo
-      namespace: argocd
-    spec:
-      podSelector:
-        matchLabels:
-          app.kubernetes.io/name: argocd-repo-server
-      ingress:
-      - from:
-        - podSelector:
-            matchLabels:
-              app.kubernetes.io/name: argocd-application-controller
-        ports:
-        - protocol: TCP
-          port: 8081
-      policyTypes:
-      - Ingress
+#   - apiVersion: monitoring.coreos.com/v1
+#     kind: ServiceMonitor
+#     metadata:
+#       name: argocd-server-metrics
+#       namespace: monitoring
+#       labels:
+#         app.kubernetes.io/name: argocd
+#         app.kubernetes.io/component: server
+#         release: my-kube-prometheus-stack
+#     spec:
+#       namespaceSelector:
+#         matchNames:
+#           - argocd
+#       selector:
+#         matchLabels:
+#           app.kubernetes.io/name: argocd-server-metrics 
+#       endpoints:
+#         - port: metrics
+#           interval: 30s
+#           path: /metrics
+
+#   - apiVersion: monitoring.coreos.com/v1
+#     kind: ServiceMonitor
+#     metadata:
+#       name: argocd-repo-server-metrics
+#       namespace: monitoring
+#       labels:
+#         app.kubernetes.io/name: argocd
+#         app.kubernetes.io/component: repo-server
+#         release: my-kube-prometheus-stack
+#     spec:
+#       namespaceSelector:
+#         matchNames:
+#           - argocd
+#       selector:
+#         matchLabels:
+#           app.kubernetes.io/name: argocd-repo-server-metrics  
+#       endpoints:
+#         - port: metrics
+#           interval: 30s
+#           path: /metrics
+
+#   - apiVersion: networking.k8s.io/v1
+#     kind: NetworkPolicy
+#     metadata:
+#       name: allow-controller-to-repo
+#       namespace: argocd
+#     spec:
+#       podSelector:
+#         matchLabels:
+#           app.kubernetes.io/name: argocd-repo-server
+#       ingress:
+#       - from:
+#         - podSelector:
+#             matchLabels:
+#               app.kubernetes.io/name: argocd-application-controller
+#         ports:
+#         - protocol: TCP
+#           port: 8081
+#       policyTypes:
+#       - Ingress

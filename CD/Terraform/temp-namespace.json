@@ -1,0 +1,59 @@
+{
+    "apiVersion": "v1",
+    "kind": "Namespace",
+    "metadata": {
+        "creationTimestamp": "2025-09-27T12:31:27Z",
+        "deletionTimestamp": "2025-09-27T13:28:04Z",
+        "labels": {
+            "kubernetes.io/metadata.name": "islamic-app"
+        },
+        "name": "islamic-app",
+        "resourceVersion": "19337",
+        "uid": "103bdb2f-a67c-4db1-b3ec-1031923aff57"
+    },
+    "spec": {
+        "finalizers": [
+            "kubernetes"
+        ]
+    },
+    "status": {
+        "conditions": [
+            {
+                "lastTransitionTime": "2025-09-27T13:28:13Z",
+                "message": "All resources successfully discovered",
+                "reason": "ResourcesDiscovered",
+                "status": "False",
+                "type": "NamespaceDeletionDiscoveryFailure"
+            },
+            {
+                "lastTransitionTime": "2025-09-27T13:28:13Z",
+                "message": "All legacy kube types successfully parsed",
+                "reason": "ParsedGroupVersions",
+                "status": "False",
+                "type": "NamespaceDeletionGroupVersionParsingFailure"
+            },
+            {
+                "lastTransitionTime": "2025-09-27T13:28:13Z",
+                "message": "Failed to delete all resource types, 1 remaining: Internal error occurred: failed calling webhook \"validate.externalsecret.external-secrets.io\": failed to call webhook: Post \"https://external-secrets-webhook.eso.svc:443/validate-external-secrets-io-v1-externalsecret?timeout=5s\": service \"external-secrets-webhook\" not found",
+                "reason": "ContentDeletionFailed",
+                "status": "True",
+                "type": "NamespaceDeletionContentFailure"
+            },
+            {
+                "lastTransitionTime": "2025-09-27T13:28:48Z",
+                "message": "All content successfully removed",
+                "reason": "ContentRemoved",
+                "status": "False",
+                "type": "NamespaceContentRemaining"
+            },
+            {
+                "lastTransitionTime": "2025-09-27T13:28:14Z",
+                "message": "All content-preserving finalizers finished",
+                "reason": "ContentHasNoFinalizers",
+                "status": "False",
+                "type": "NamespaceFinalizersRemaining"
+            }
+        ],
+        "phase": "Terminating"
+    }
+}

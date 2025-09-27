@@ -1,57 +1,31 @@
 applications:
 
-  prometheus:
+  ebs-csi:
     namespace: argocd
     project: default
-    sources:
-      - repoURL: https://prometheus-community.github.io/helm-charts
-        chart: kube-prometheus-stack
-        targetRevision: "*"
-        helm:
-          releaseName: my-kube-prometheus-stack
-          valueFiles:
-            - $values/CD/Terraform/values/prom-values.yaml
-      - repoURL: https://github.com/abdelrahman-shebl/Islamic-app.git
-        targetRevision: main
-        ref: values
+    source:
+      chart: aws-ebs-csi-driver
+      repoURL: https://kubernetes-sigs.github.io/aws-ebs-csi-driver
+      targetRevision: "*"
+      helm:
+        values: |
+          controller:
+            serviceAccount:
+              create: true
+              name: ebs-sa
+              annotations:
+                eks.amazonaws.com/role-arn: ${ebs_role_arn}
     destination:
-      namespace: monitoring
-      server: https://kubernetes.default.svc
-    metadata:
-      annotations:
-        argocd.argoproj.io/sync-wave: "-2"
-    syncPolicy:
-      automated:
-        prune: true
-        selfHeal: true
-      syncOptions:
-        - CreateNamespace=true
-
-  argocd-full-app:
-    namespace: argocd  
-    project: default
-    sources:
-      - repoURL: https://argoproj.github.io/argo-helm
-        chart: argo-cd
-        targetRevision: "*"
-        helm:
-          valueFiles:
-            - $values/CD/Terraform/values/argo-full-values.yaml
-      - repoURL: https://github.com/abdelrahman-shebl/Islamic-app.git
-        targetRevision: main
-        ref: values
-    destination:
-      namespace: argocd
+      namespace: kube-system
       server: https://kubernetes.default.svc
     metadata:
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
     syncPolicy:
       automated:
-        prune: false  
+        prune: true
         selfHeal: true
 
-        
   aws-load-balancer-controller:
     namespace: argocd
     project: default
@@ -77,14 +51,13 @@ applications:
       server: https://kubernetes.default.svc
     metadata:
       annotations:
-        argocd.argoproj.io/sync-wave: "1"
+        argocd.argoproj.io/sync-wave: "0"
     syncPolicy:
       automated:
         prune: true
         selfHeal: true
       syncOptions:
         - CreateNamespace=true
-
 
   external-dns:
     namespace: argocd
@@ -96,44 +69,31 @@ applications:
       helm:
         values: |
           provider: aws
-          
           aws:
             region: ${aws_region}
             zoneType: public
-
-          
           domainFilters:
             - shebl22.me  
-          
           sources:
             - service
             - ingress
-
           serviceAccount:
             create: true
             name: edns-sa
             annotations:
               eks.amazonaws.com/role-arn: ${edns_role_arn}
-          
           replicas: 1
-          
           policy: sync  
-          
           registry: txt
           txtOwnerId: ${cluster_name}
           txtPrefix: external-dns-
-
           logLevel: info
           logFormat: text
-          
           interval: 1m
- 
           securityContext:
             fsGroup: 65534
             runAsNonRoot: true
             runAsUser: 65534
-
-          
     destination:
       namespace: kube-system
       server: https://kubernetes.default.svc
@@ -145,7 +105,6 @@ applications:
         prune: true
         selfHeal: true
 
-
   external-secrets:
     namespace: argocd
     project: default
@@ -153,9 +112,11 @@ applications:
       chart: external-secrets
       repoURL: https://charts.external-secrets.io
       targetRevision: 0.20.1
-      helm:  # MOVED: This should be under source:, not after destination:
+      helm:
         values: |
           installCRDs: true
+          webhook:
+            create: false
           serviceAccount:
             create: true
             name: eso-sa
@@ -212,9 +173,8 @@ applications:
       syncOptions:
         - CreateNamespace=true
 
-
   ingress-app:
-    namespace: islamic-app
+    namespace: argocd
     project: default
     source:
       path: CI/K8s/ingress
