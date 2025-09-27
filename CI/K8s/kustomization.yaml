@@ -2,11 +2,14 @@ resources:
   - config-maps/cm-back.yaml
   - config-maps/cm-front.yaml
   - config-maps/db-cm.yaml
+
   - StorageClass/ebs-storage.yaml
+
   - statefulsets/db-ss.yaml
+
   - Deployments/backend-deploy.yaml
   - Deployments/frontend-deploy.yaml
+
   - services/db-svc.yaml
   - services/back-svc.yaml
   - services/front-svc.yaml
-  # - ingress
