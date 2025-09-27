@@ -3,14 +3,17 @@ applications:
   prometheus:
     namespace: argocd
     project: default
-    source:
-      chart: kube-prometheus-stack
-      repoURL: https://prometheus-community.github.io/helm-charts
-      targetRevision: "*"
-      helm:
-        releaseName: my-kube-prometheus-stack
-        values: |
-${indent(10, file("${path.module}/values/prom-values.yaml"))}
+    sources:
+      - repoURL: https://prometheus-community.github.io/helm-charts
+        chart: kube-prometheus-stack
+        targetRevision: "*"
+        helm:
+          releaseName: my-kube-prometheus-stack
+          valueFiles:
+            - $values/CD/Terraform/values/prom-values.yaml
+      - repoURL: https://github.com/abdelrahman-shebl/Islamic-app.git
+        targetRevision: main
+        ref: values
     destination:
       namespace: monitoring
       server: https://kubernetes.default.svc
@@ -27,13 +30,16 @@ ${indent(10, file("${path.module}/values/prom-values.yaml"))}
   argocd-full-app:
     namespace: argocd  
     project: default
-    source:
-      chart: argo-cd
-      repoURL: https://argoproj.github.io/argo-helm
-      targetRevision: "*"
-      helm:
-        values: |
-${indent(10, file("${path.module}/values/argo-full-values.yaml"))}
+    sources:
+      - repoURL: https://argoproj.github.io/argo-helm
+        chart: argo-cd
+        targetRevision: "*"
+        helm:
+          valueFiles:
+            - $values/CD/Terraform/values/argo-full-values.yaml
+      - repoURL: https://github.com/abdelrahman-shebl/Islamic-app.git
+        targetRevision: main
+        ref: values
     destination:
       namespace: argocd
       server: https://kubernetes.default.svc
@@ -45,35 +51,7 @@ ${indent(10, file("${path.module}/values/argo-full-values.yaml"))}
         prune: false  
         selfHeal: true
 
-
-
-  ebs-csi:
-    namespace: argocd
-    project: default
-    source:
-      chart: aws-ebs-csi-driver
-      repoURL: https://kubernetes-sigs.github.io/aws-ebs-csi-driver
-      targetRevision: "*"
-      helm:
-        values: |
-         controller:
-          serviceAccount:
-            create: true
-            name: ebs-sa
-            annotations:
-              eks.amazonaws.com/role-arn: ${ebs_role_arn}
-
-    destination:
-      namespace: kube-system
-      server: https://kubernetes.default.svc
-    metadata:
-      annotations:
-        argocd.argoproj.io/sync-wave: "0"
-    syncPolicy:
-      automated:
-        prune: true
-        selfHeal: true
-
+        
   aws-load-balancer-controller:
     namespace: argocd
     project: default

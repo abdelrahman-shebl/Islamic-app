@@ -40,6 +40,11 @@
 
 # }
 
+resource "kubernetes_namespace" "islamic_app" {
+  metadata {
+    name = "islamic-app"
+  }
+}
 
 resource "helm_release" "argo" {
   depends_on = [aws_eks_node_group.eks_node_group]
@@ -75,6 +80,7 @@ resource "helm_release" "argocd-apps" {
       vpc_id       = aws_vpc.main.id 
       aws_region   = var.region 
       sslCertificateArn = aws_acm_certificate_validation.shebl22.certificate_arn
+      path_module        = path.module
     })
   ]
 }
