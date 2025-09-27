@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: {image}
+          image: shebl22/backend:6825e1eabcc34824b04dff185811276fa8990339
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5000
