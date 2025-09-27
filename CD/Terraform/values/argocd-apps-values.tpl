@@ -1,5 +1,51 @@
 applications:
 
+  prometheus:
+    namespace: argocd
+    project: default
+    source:
+      chart: kube-prometheus-stack
+      repoURL: https://prometheus-community.github.io/helm-charts
+      targetRevision: "*"
+      helm:
+        releaseName: my-kube-prometheus-stack
+        values: |
+${indent(10, file("${path.module}/values/prom-values.yaml"))}
+    destination:
+      namespace: monitoring
+      server: https://kubernetes.default.svc
+    metadata:
+      annotations:
+        argocd.argoproj.io/sync-wave: "-2"
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+
+  argocd-full-app:
+    namespace: argocd  
+    project: default
+    source:
+      chart: argo-cd
+      repoURL: https://argoproj.github.io/argo-helm
+      targetRevision: "*"
+      helm:
+        values: |
+${indent(10, file("${path.module}/values/argo-full-values.yaml"))}
+    destination:
+      namespace: argocd
+      server: https://kubernetes.default.svc
+    metadata:
+      annotations:
+        argocd.argoproj.io/sync-wave: "-1"
+    syncPolicy:
+      automated:
+        prune: false  
+        selfHeal: true
+
+
 
   ebs-csi:
     namespace: argocd
@@ -182,6 +228,29 @@ applications:
     metadata:
       annotations:
         argocd.argoproj.io/sync-wave: "5"
+    syncPolicy:
+      automated:
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+
+
+  ingress-app:
+    namespace: islamic-app
+    project: default
+    source:
+      path: CI/K8s/ingress
+      repoURL: https://github.com/abdelrahman-shebl/Islamic-app.git
+      targetRevision: HEAD
+      helm:
+        values: |
+          sslCertificateArn: ${sslCertificateArn}
+    destination:
+      namespace: islamic-app
+      server: https://kubernetes.default.svc
+    metadata:
+      annotations:
+        argocd.argoproj.io/sync-wave: "6"
     syncPolicy:
       automated:
         selfHeal: true

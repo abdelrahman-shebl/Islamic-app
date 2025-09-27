@@ -20,3 +20,22 @@ resource "aws_ssm_parameter" "back_creds" {
     JWT_SECRET_KEY  = local.secrets.jwt_secret_key
   })
 }
+
+resource "aws_ssm_parameter" "gmail_smtp_secret" {
+  name      = "/monitoring/gmail-smtp"
+  type      = "SecureString"
+  overwrite = true
+  value     = jsonencode({
+    smtp_auth_password = local.secrets.gmail_smtp_password
+  })
+}
+
+resource "aws_ssm_parameter" "slack_webhook_secret" {
+  name      = "/monitoring/slack-webhook"
+  type      = "SecureString"
+  overwrite = true
+  value     = jsonencode({
+    slack_api_url = local.secrets.slack_api_url
+  })
+}
+

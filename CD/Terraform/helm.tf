@@ -52,7 +52,7 @@ resource "helm_release" "argo" {
   create_namespace = true
 
   values = [
-    file("${path.module}/values/argo-values.yaml")
+    file("${path.module}/values/argo-boot-values.yaml")
   ]
 }
 
@@ -74,6 +74,7 @@ resource "helm_release" "argocd-apps" {
       cluster_name = aws_eks_cluster.eks.name
       vpc_id       = aws_vpc.main.id 
       aws_region   = var.region 
+      sslCertificateArn = aws_acm_certificate_validation.shebl22.certificate_arn
     })
   ]
 }

@@ -7,6 +7,13 @@ metadata:
     external-dns.alpha.kubernetes.io/hostname: shebl22.me
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/healthcheck-path: /health
+
+    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.sslCertificateArn  }}
+    alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS-1-2-2017-01
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+
 spec:
   ingressClassName: alb
   rules:

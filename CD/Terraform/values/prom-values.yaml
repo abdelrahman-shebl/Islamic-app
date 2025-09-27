@@ -47,8 +47,7 @@ additionalPrometheusRulesMap:
 
 grafana:
   service:
-    type: NodePort
-    nodePort: 32000
+    type: LoadBalancer
 
   adminUser: admin
   adminPassword: "admin"

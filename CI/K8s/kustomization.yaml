@@ -4,4 +4,4 @@ resources:
   - statefulsets
   - Deployments
   - services
-  - ingress
+  # - ingress
