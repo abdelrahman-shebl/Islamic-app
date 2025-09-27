@@ -16,7 +16,7 @@ The Islamic App follows a three-tier architecture:
 
 ### Architecture Diagram
 <!-- TODO: Add CI Pipeline Architecture Diagram -->
-![CI Pipeline Architecture](./docs/images/ci-architecture.png)
+![CI Pipeline Architecture](../images/CI.png)
 
 ### GitHub Actions Pipeline
 
@@ -38,8 +38,7 @@ graph LR
 - Validates application functionality before deployment
 - Ensures code quality and reliability
 
-<!-- TODO: Add GitHub Actions Test Results Screenshot -->
-![Test Results](./docs/images/github-actions-tests.png)
+
 
 #### 2. **Docker Build**
 - Builds containerized images for frontend and backend services
@@ -51,8 +50,6 @@ graph LR
 - Scans for known CVEs in base images and dependencies
 - Blocks deployment of images with critical vulnerabilities
 
-<!-- TODO: Add Trivy Scan Results Screenshot -->
-![Trivy Security Scan](./docs/images/trivy-scan-results.png)
 
 #### 4. **Docker Registry Push**
 - Pushes validated and scanned images to container registry
@@ -66,7 +63,7 @@ graph LR
 ## 📁 Kubernetes Structure
 
 <!-- TODO: Add Kubernetes Dashboard Screenshot -->
-![Kubernetes Dashboard](./docs/images/k8s-dashboard.png)
+![Kubernetes Dashboard](../images/K8s.png)
 
 ```
 CI/K8s/
@@ -137,36 +134,6 @@ CI/K8s/
 - **HTTPS Enforcement**: Automatic HTTP to HTTPS redirection
 - **Certificate Rotation**: Automated certificate renewal
 
-## 🚀 Getting Started
-
-### Prerequisites
-- GitHub repository with Actions enabled
-- Container registry access (ECR/DockerHub)
-- Kubernetes cluster with ArgoCD installed
-
-### Pipeline Configuration
-
-1. **Set up GitHub Secrets**:
-   ```bash
-   DOCKER_USERNAME
-   DOCKER_PASSWORD
-   KUBE_CONFIG
-   ```
-
-2. **Configure Workflow File**:
-   ```yaml
-   name: CI Pipeline
-   on:
-     push:
-       branches: [ main, develop ]
-     pull_request:
-       branches: [ main ]
-   ```
-
-3. **Deploy Kubernetes Manifests**:
-   ```bash
-   kubectl apply -k CI/K8s/
-   ```
 
 ## 📋 Monitoring & Observability
 
@@ -211,13 +178,6 @@ CI/K8s/
 3. Make your changes
 4. Run tests locally
 5. Submit a pull request
-
-## 📖 Documentation
-
-- [Kubernetes Documentation](./docs/kubernetes.md)
-- [Pipeline Configuration](./docs/pipeline.md)
-- [Security Guidelines](./docs/security.md)
-- [Troubleshooting Guide](./docs/troubleshooting.md)
 
 ## 📄 License
 
